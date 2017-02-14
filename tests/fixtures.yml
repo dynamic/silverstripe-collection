@@ -1,0 +1,8 @@
+TestCollection:
+  default:
+    Title: 'Test Collection'
+TestCollectionObject:
+  one:
+    Title: 'Object One'
+  two:
+    Title: 'Object Two'

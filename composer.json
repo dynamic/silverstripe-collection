@@ -1,0 +1,34 @@
+{
+    "name": "dynamic/silverstripe-collection",
+    "description": "Display a filterable collection of pages or dataobjects on a page.",
+    "authors": [
+        {
+            "name": "Dynamic",
+            "email": "dev@dynamicagency.com",
+            "homepage": "http://www.dynamicagency.com"
+        }
+    ],
+    "keywords": [
+        "silverstripe"
+    ],
+    "type": "silverstripe-module",
+    "license": "BSD-3-Clause",
+    "require": {
+        "silverstripe/cms": "^3.2",
+        "silverstripe/framework": "^3.2"
+    },
+    "require-dev": {
+        "phpunit/PHPUnit": "^3.7"
+    },
+    "config": {
+        "process-timeout": 600
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "installer-name": "dynamic-blocks",
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
