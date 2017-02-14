@@ -26,7 +26,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
-        "installer-name": "dynamic-blocks",
+        "installer-name": "collection",
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
