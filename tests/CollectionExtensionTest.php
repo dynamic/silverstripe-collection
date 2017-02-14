@@ -6,8 +6,7 @@ class CollectionExtensionTest extends FunctionalTest
      * @var string
      */
     protected static $fixture_file = array(
-        'core-tools/tests/CoreToolsTest.yml',
-        'core-tools/tests/Fixtures.yml',
+        'collection/tests/fixtures.yml',
     );
 
     /**
@@ -56,7 +55,7 @@ class CollectionExtensionTest extends FunctionalTest
     public function testGetCollection()
     {
         $object = $this->objFromFixture('TestCollection', 'default');
-        $controller = new TestPage_Controller($object);
+        $controller = new TestCollection_Controller($object);
         $this->assertInstanceOf('DataList', $controller->getCollection());
 
         $object = $controller->config()->managed_object;
@@ -68,7 +67,7 @@ class CollectionExtensionTest extends FunctionalTest
      */
     public function testGetManagedObject()
     {
-        $object = TestPage_Controller::create();
+        $object = TestCollection_Controller::create();
         $expected = 'TestCollectionObject';
         $this->assertEquals($expected, $object->getCollectionObject());
     }
@@ -78,7 +77,7 @@ class CollectionExtensionTest extends FunctionalTest
      */
     public function testGetPageSize()
     {
-        $object = TestPage_Controller::create();
+        $object = TestCollection_Controller::create();
         $expected = 10;
         $this->assertEquals($expected, $object->getCollectionSize());
     }
@@ -89,7 +88,7 @@ class CollectionExtensionTest extends FunctionalTest
     public function testPaginatedList()
     {
         $object = $this->objFromFixture('TestCollection', 'default');
-        $controller = new TestPage_Controller($object);
+        $controller = new TestCollection_Controller($object);
         $this->assertInstanceOf('PaginatedList', $controller->PaginatedList());
     }
 
@@ -99,7 +98,7 @@ class CollectionExtensionTest extends FunctionalTest
     public function testGroupedList()
     {
         $object = $this->objFromFixture('TestCollection', 'default');
-        $controller = new TestPage_Controller($object);
+        $controller = new TestCollection_Controller($object);
         $this->assertInstanceOf('GroupedList', $controller->GroupedList());
     }
 
@@ -109,13 +108,13 @@ class CollectionExtensionTest extends FunctionalTest
     public function testCollectionSearchForm()
     {
         $object = $this->objFromFixture('TestCollection', 'default');
-        $controller = new TestPage_Controller($object);
+        $controller = new TestCollection_Controller($object);
         $this->assertInstanceOf('Form', $controller->CollectionSearchForm());
     }
 }
 
 /**
- * Class TestPage.
+ * Class TestCollection.
  */
 class TestCollection extends Page implements TestOnly
 {
@@ -126,10 +125,21 @@ class TestCollection_Controller extends Page_Controller implements TestOnly
 {
     private static $managed_object = 'TestCollectionObject';
 
-    private static $extensions = [CollectionExtension];
+    private static $extensions = ['CollectionExtension'];
 }
 
 class TestCollectionObject extends Dataobject implements TestOnly
 {
+    private static $db = [
+        'Title' => 'Varchar(255)',
+    ];
 
+    public function getSortOptions()
+    {
+        return array(
+            'Created' => 'Date',
+            'Title' => 'Name A-Z',
+            'Title DESC' => 'Name Z-A',
+        );
+    }
 }
