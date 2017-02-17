@@ -166,15 +166,16 @@ class CollectionExtension extends Extension
                 $actions
             );
         }
+
+        // allow $form to be extended via extension
+        $this->owner->extend('updateCollectionForm', $form);
+
         $form
             ->setFormMethod('get')
             ->disableSecurityToken()
             ->loadDataFrom($request->getVars())
             ->setFormAction($this->owner->Link())
         ;
-
-        // allow $form to be extended via extension
-        $this->owner->extend('updateCollectionForm', $form);
 
         return $form;
     }
