@@ -10,7 +10,7 @@ Display a filterable collection of pages or dataobjects on a page.
 
 ## Requirements
 
-- SilverStripe 3.2
+- SilverStripe ^4.0
 
 ## Installation
 

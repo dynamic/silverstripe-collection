@@ -1,5 +1,18 @@
 <?php
 
+namespace Dynamic\Collection;
+
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Extension;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\GroupedList;
+use SilverStripe\ORM\PaginatedList;
+
 class CollectionExtension extends Extension
 {
     /**
@@ -26,10 +39,10 @@ class CollectionExtension extends Extension
     }
 
     /**
-     * @param SS_HTTPRequest|null $request
+     * @param HTTPRequest|null $request
      * @return $this
      */
-    public function setCollection(SS_HTTPRequest $request = null)
+    public function setCollection(HTTPRequest $request = null)
     {
         if ($request === null) {
             $request = $this->owner->request;
@@ -87,10 +100,10 @@ class CollectionExtension extends Extension
     }
 
     /**
-     * @param SS_HTTPRequest|null $request
-     * @return PaginatedList
+     * @param HTTPRequest|null $request
+     * @return mixed
      */
-    public function PaginatedList(SS_HTTPRequest $request = null)
+    public function PaginatedList(HTTPRequest $request = null)
     {
         if ($request === null) {
             $request = $this->owner->request;
@@ -129,7 +142,9 @@ class CollectionExtension extends Extension
         $request = ($this->owner->request) ? $this->owner->request : $this->owner->parentController->getRequest();
         $sort = ($request->getVar('Sort')) ? (string) $request->getVar('Sort') : singleton($object)->stat('default_sort');
 
-        $context = (method_exists($object, 'getCustomSearchContext')) ? singleton($object)->getCustomSearchContext() : singleton($object)->getDefaultSearchContext();
+        $context = (method_exists($object, 'getCustomSearchContext'))
+            ? singleton($object)->getCustomSearchContext()
+            : singleton($object)->getDefaultSearchContext();
         $fields = $context->getSearchFields();
 
         // add sort field if managed object specs getSortOptions()
@@ -151,7 +166,7 @@ class CollectionExtension extends Extension
             new FormAction($this->owner->Link(), 'Search')
         );
 
-        if (class_exists('BootstrapForm')) {
+        if (class_exists(BootstrapForm::class)) {
             $form = BootstrapForm::create(
                 $this->owner,
                 'CollectionSearchForm',

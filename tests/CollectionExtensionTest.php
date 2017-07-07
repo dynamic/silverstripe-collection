@@ -1,12 +1,23 @@
 <?php
 
+namespace Dynamic\Collection\Test;
+
+use Dynamic\Collection\Test\TestOnly\TestCollection;
+use Dynamic\Collection\Test\TestOnly\TestCollectionController;
+use Dynamic\Collection\Test\TestOnly\TestCollectionObject;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\Form;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\GroupedList;
+use SilverStripe\ORM\PaginatedList;
+
 class CollectionExtensionTest extends FunctionalTest
 {
     /**
      * @var string
      */
     protected static $fixture_file = array(
-        'collection/tests/fixtures.yml',
+        'fixtures.yml',
     );
 
     /**
@@ -22,10 +33,10 @@ class CollectionExtensionTest extends FunctionalTest
     /**
      * @var array
      */
-    protected $extraDataObjects = array(
-        'TestCollection',
-        'TestCollection_Controller',
-        'TestCollectionObject',
+    protected static $extra_dataobjects = array(
+        TestCollection::class,
+        TestCollectionController::class,
+        TestCollectionObject::class,
     );
 
     /**
@@ -54,9 +65,9 @@ class CollectionExtensionTest extends FunctionalTest
      */
     public function testGetCollection()
     {
-        $object = $this->objFromFixture('TestCollection', 'default');
-        $controller = new TestCollection_Controller($object);
-        $this->assertInstanceOf('DataList', $controller->getCollection());
+        $object = $this->objFromFixture(TestCollection::class, 'default');
+        $controller = new TestCollectionController($object);
+        $this->assertInstanceOf(DataList::class, $controller->getCollection());
 
         $object = $controller->config()->managed_object;
         $this->assertInstanceOf($object, $controller->getCollection()->first());
@@ -67,8 +78,8 @@ class CollectionExtensionTest extends FunctionalTest
      */
     public function testGetManagedObject()
     {
-        $object = TestCollection_Controller::create();
-        $expected = 'TestCollectionObject';
+        $object = TestCollectionController::create();
+        $expected = TestCollectionObject::class;
         $this->assertEquals($expected, $object->getCollectionObject());
     }
 
@@ -77,7 +88,7 @@ class CollectionExtensionTest extends FunctionalTest
      */
     public function testGetPageSize()
     {
-        $object = TestCollection_Controller::create();
+        $object = TestCollectionController::create();
         $expected = 10;
         $this->assertEquals($expected, $object->getCollectionSize());
     }
@@ -87,9 +98,9 @@ class CollectionExtensionTest extends FunctionalTest
      */
     public function testPaginatedList()
     {
-        $object = $this->objFromFixture('TestCollection', 'default');
-        $controller = new TestCollection_Controller($object);
-        $this->assertInstanceOf('PaginatedList', $controller->PaginatedList());
+        $object = $this->objFromFixture(TestCollection::class, 'default');
+        $controller = new TestCollectionController($object);
+        $this->assertInstanceOf(PaginatedList::class, $controller->PaginatedList());
     }
 
     /**
@@ -97,9 +108,9 @@ class CollectionExtensionTest extends FunctionalTest
      */
     public function testGroupedList()
     {
-        $object = $this->objFromFixture('TestCollection', 'default');
-        $controller = new TestCollection_Controller($object);
-        $this->assertInstanceOf('GroupedList', $controller->GroupedList());
+        $object = $this->objFromFixture(TestCollection::class, 'default');
+        $controller = new TestCollectionController($object);
+        $this->assertInstanceOf(GroupedList::class, $controller->GroupedList());
     }
 
     /**
@@ -107,39 +118,8 @@ class CollectionExtensionTest extends FunctionalTest
      */
     public function testCollectionSearchForm()
     {
-        $object = $this->objFromFixture('TestCollection', 'default');
-        $controller = new TestCollection_Controller($object);
-        $this->assertInstanceOf('Form', $controller->CollectionSearchForm());
-    }
-}
-
-/**
- * Class TestCollection.
- */
-class TestCollection extends Page implements TestOnly
-{
-
-}
-
-class TestCollection_Controller extends Page_Controller implements TestOnly
-{
-    private static $managed_object = 'TestCollectionObject';
-
-    private static $extensions = ['CollectionExtension'];
-}
-
-class TestCollectionObject extends Dataobject implements TestOnly
-{
-    private static $db = [
-        'Title' => 'Varchar(255)',
-    ];
-
-    public function getSortOptions()
-    {
-        return array(
-            'Created' => 'Date',
-            'Title' => 'Name A-Z',
-            'Title DESC' => 'Name Z-A',
-        );
+        $object = $this->objFromFixture(TestCollection::class, 'default');
+        $controller = new TestCollectionController($object);
+        $this->assertInstanceOf(Form::class, $controller->CollectionSearchForm());
     }
 }
