@@ -14,8 +14,8 @@
     "type": "silverstripe-module",
     "license": "BSD-3-Clause",
     "require": {
-        "silverstripe/cms": "^3.2",
-        "silverstripe/framework": "^3.2"
+        "silverstripe/cms": "^4.0",
+        "silverstripe/framework": "^4.0"
     },
     "require-dev": {
         "phpunit/PHPUnit": "^3.7"
@@ -23,12 +23,18 @@
     "config": {
         "process-timeout": 600
     },
+    "autoload": {
+        "psr-4": {
+            "Dynamic\\Collection\\": "src/",
+            "Dynamic\\Collection\\Test\\": "tests/"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "installer-name": "collection",
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "2.0.x-dev"
         }
     }
 }
