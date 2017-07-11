@@ -28,7 +28,7 @@
     "extra": {
         "installer-name": "collection",
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "1.0": "1.0.x-dev"
         }
     }
 }
