@@ -2,6 +2,7 @@
 
 namespace Dynamic\Collection;
 
+use League\Flysystem\Exception;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\DropdownField;
@@ -26,6 +27,11 @@ class CollectionExtension extends Extension
      * @var DataList|ArrayList
      */
     private $collection;
+
+    /**
+     * @var
+     */
+    private $collection_object;
 
     /**
      * @return ArrayList|DataList
@@ -55,12 +61,12 @@ class CollectionExtension extends Extension
         $object = $this->getCollectionObject();
 
         $context = (method_exists($object, 'getCustomSearchContext'))
-            ? singleton($object)->getCustomSearchContext()
-            : singleton($object)->getDefaultSearchContext();
+            ? $object->getCustomSearchContext()
+            : $object->getDefaultSearchContext();
 
         $sort = ($request->getVar('Sort'))
             ? (string) $request->getVar('Sort')
-            : singleton($object)->stat('default_sort');
+            : $object->stat('default_sort');
 
         $collection = $context->getResults($searchCriteria)->sort($sort);
 
@@ -76,15 +82,25 @@ class CollectionExtension extends Extension
      */
     public function getCollectionObject()
     {
-        if ($object = $this->owner->config()->managed_object) {
-            $object = (string) $object;
-        } else {
-            $object = 'Page';
+        if (!$this->collection_object) {
+            $this->setCollectionObject();
+        }
+        return $this->collection_object;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setCollectionObject()
+    {
+        try {
+            $collection_object = $this->owner->config()->get('managed_object');
+            $this->collection_object = $collection_object::create();
+        } catch (Exception $e) {
+            trigger_error($e, E_USER_NOTICE);
         }
 
-        $this->owner->extend('updateCollectionObject', $object);
-
-        return $object;
+        return $this;
     }
 
     /**
@@ -140,18 +156,18 @@ class CollectionExtension extends Extension
     {
         $object = $this->getCollectionObject();
         $request = ($this->owner->request) ? $this->owner->request : $this->owner->parentController->getRequest();
-        $sort = ($request->getVar('Sort')) ? (string) $request->getVar('Sort') : singleton($object)->stat('default_sort');
+        $sort = ($request->getVar('Sort')) ? (string) $request->getVar('Sort') : $object->stat('default_sort');
 
-        $context = (method_exists($object, 'getCustomSearchContext'))
-            ? singleton($object)->getCustomSearchContext()
-            : singleton($object)->getDefaultSearchContext();
+        $context = ($object->hasMethod('getCustomSearchContext'))
+            ? $object->getCustomSearchContext()
+            : $object->getDefaultSearchContext();
         $fields = $context->getSearchFields();
 
         // add sort field if managed object specs getSortOptions()
-        if (method_exists($object, 'getSortOptions')) {
-            $sortOptions = singleton($object)->getSortOptions();
-            if (singleton($object)->stat('default_sort')) {
-                $defaultSort = array(str_replace('"', '', singleton($object)->stat('default_sort')) => 'Default');
+        if ($object->hasMethod('getSortOptions')) {
+            $sortOptions = $object->getSortOptions();
+            if ($object->stat('default_sort')) {
+                $defaultSort = array(str_replace('"', '', $object->stat('default_sort')) => 'Default');
                 $sortOptions = array_merge($defaultSort, $sortOptions);
             }
             $fields->add(
@@ -174,6 +190,7 @@ class CollectionExtension extends Extension
                 $actions
             );
         } else {
+
             $form = Form::create(
                 $this->owner,
                 'CollectionSearchForm',
