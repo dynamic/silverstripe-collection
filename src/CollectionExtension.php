@@ -190,7 +190,6 @@ class CollectionExtension extends Extension
                 $actions
             );
         } else {
-
             $form = Form::create(
                 $this->owner,
                 'CollectionSearchForm',
