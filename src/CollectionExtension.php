@@ -175,9 +175,6 @@ class CollectionExtension extends Extension
             );
         }
 
-        // allow $fields to be updated via extension
-        $this->owner->extend('updateCollectionFields', $fields);
-
         $actions = new FieldList(
             new FormAction($this->owner->Link(), 'Search')
         );
