@@ -41,7 +41,7 @@ class CollectionExtension extends Extension
 
         $object = $this->getCollectionObject();
 
-        $context = (method_exists($object, 'getCustomSearchContext'))
+        $context = singleton($object)->hasMethod('getCustomSearchContext')
             ? singleton($object)->getCustomSearchContext()
             : singleton($object)->getDefaultSearchContext();
 
