@@ -60,7 +60,7 @@ class CollectionExtension extends Extension
 
         $object = $this->getCollectionObject();
 
-        $context = (method_exists($object, 'getCustomSearchContext'))
+        $context = ($object->hasMethod('getCustomSearchContext'))
             ? $object->getCustomSearchContext()
             : $object->getDefaultSearchContext();
 
@@ -68,7 +68,17 @@ class CollectionExtension extends Extension
             ? (string) $request->getVar('Sort')
             : $object->stat('default_sort');
 
-        $collection = $context->getResults($searchCriteria)->sort($sort);
+
+        // check if the sort has an order (ASC or DESC)
+        // prevents query errors when sorting on relations with an order ('Location.Title DESC')
+        // no order
+        if (strpos($sort, ' ') === false) {
+            $collection = $context->getResults($searchCriteria)->sort($sort);
+            // order is given
+        } else {
+            $sortParts = explode(' ', $sort);
+            $collection = $context->getResults($searchCriteria)->sort($sortParts[0], $sortParts[1]);
+        }
 
         // allow $collection to be updated via extension
         $this->owner->extend('updateCollectionItems', $collection, $searchCriteria);
@@ -78,7 +88,7 @@ class CollectionExtension extends Extension
     }
 
     /**
-     * @return string
+     * @return string|\SilverStripe\ORM\DataObject
      */
     public function getCollectionObject()
     {
@@ -94,6 +104,7 @@ class CollectionExtension extends Extension
     public function setCollectionObject()
     {
         try {
+            /** @var \SilverStripe\ORM\DataObject $collection_object */
             $collection_object = $this->owner->config()->get('managed_object');
             $this->collection_object = $collection_object::create();
         } catch (Exception $e) {
@@ -155,6 +166,7 @@ class CollectionExtension extends Extension
     public function CollectionSearchForm()
     {
         $object = $this->getCollectionObject();
+        /** @var HTTPRequest $request */
         $request = ($this->owner->request) ? $this->owner->request : $this->owner->parentController->getRequest();
         $sort = ($request->getVar('Sort')) ? (string) $request->getVar('Sort') : $object->stat('default_sort');
 
@@ -202,8 +214,7 @@ class CollectionExtension extends Extension
             ->setFormMethod('get')
             ->disableSecurityToken()
             ->loadDataFrom($request->getVars())
-            ->setFormAction($this->owner->Link())
-        ;
+            ->setFormAction($this->owner->Link());
 
         return $form;
     }
