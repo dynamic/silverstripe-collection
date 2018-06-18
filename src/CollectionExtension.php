@@ -76,8 +76,24 @@ class CollectionExtension extends Extension
             $collection = $context->getResults($searchCriteria)->sort($sort);
             // order is given
         } else {
-            $sortParts = explode(' ', $sort);
-            $collection = $context->getResults($searchCriteria)->sort($sortParts[0], $sortParts[1]);
+            if (strpos($sort, ',') === false) {
+                $sortParts = explode(' ', $sort);
+                $collection = $context->getResults($searchCriteria)->sort($sortParts[0], $sortParts[1]);
+            } else {
+                // multiple orders are given
+                $sortParts = [];
+                $sortArgs = explode(',', $sort);
+                foreach ($sortArgs as $arg) {
+                    $arg = trim($arg);
+                    if (strpos($arg, ' ') === false) {
+                        $sortParts[$arg] = 'ASC';
+                    } else {
+                        $part = explode(' ', $arg);
+                        $sortParts[$part[0]] = $part[1];
+                    }
+                }
+                $collection = $context->getResults($searchCriteria)->sort($sortParts);
+            }
         }
 
         // allow $collection to be updated via extension
