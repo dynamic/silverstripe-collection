@@ -25,7 +25,7 @@ ExamplePage_Controller:
 	managed_object: ExampleObject
 	page_size: 10
 	extensions:
-		- CollectionExtension
+		- Dynamic\Collection\CollectionExtension
 ```
 
 ## Managed Page/DataObject
