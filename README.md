@@ -1,4 +1,6 @@
-# dynamic/silverstripe-collection
+# Silverstripe Collection
+
+Display a filterable collection of pages or dataobjects on a page.
 
 [![Build Status](https://travis-ci.org/dynamic/silverstripe-collection.svg?branch=master)](https://travis-ci.org/dynamic/silverstripe-collection)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dynamic/silverstripe-collection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dynamic/silverstripe-collection/?branch=master)
@@ -6,11 +8,14 @@
 [![Build Status](https://scrutinizer-ci.com/g/dynamic/silverstripe-collection/badges/build.png?b=master)](https://scrutinizer-ci.com/g/dynamic/silverstripe-collection/build-status/master)
 [![codecov](https://codecov.io/gh/dynamic/silverstripe-collection/branch/master/graph/badge.svg)](https://codecov.io/gh/dynamic/silverstripe-collection)
 
-Display a filterable collection of pages or dataobjects on a page.
+[![Latest Stable Version](https://poser.pugx.org/dynamic/silverstripe-collection/v/stable)](https://packagist.org/packages/dynamic/silverstripe-collection)
+[![Total Downloads](https://poser.pugx.org/dynamic/silverstripe-collection/downloads)](https://packagist.org/packages/dynamic/silverstripe-collection)
+[![Latest Unstable Version](https://poser.pugx.org/dynamic/silverstripe-collection/v/unstable)](https://packagist.org/packages/dynamic/silverstripe-collection)
+[![License](https://poser.pugx.org/dynamic/silverstripe-collection/license)](https://packagist.org/packages/dynamic/silverstripe-collection)
 
 ## Requirements
 
-- SilverStripe ^4.0
+- SilverStripe 4.x
 
 ## Installation
 
@@ -22,10 +27,10 @@ In your config.yml:
 
 ```
 ExamplePage_Controller:
-	managed_object: ExampleObject
-	page_size: 10
-	extensions:
-		- Dynamic\Collection\CollectionExtension
+  managed_object: ExampleObject
+  page_size: 10
+  extensions:
+    - Dynamic\Collection\CollectionExtension
 ```
 
 ## Managed Page/DataObject
@@ -34,12 +39,12 @@ Collection will create a search form based on the managed object's `$searchable_
 
 ```
 priavte static $searchable_fields = [
-	'Title' => [
-		'title' => 'Name',
-	],
-	'Category.ID' => [
-		'title' => 'Category',
-	],
+  'Title' => [
+    'title' => 'Name',
+  ],
+  'Category.ID' => [
+    'title' => 'Category',
+  ],
 ];
 ```
 
@@ -49,13 +54,13 @@ To include a sorting dropdown field, create a `getSortOptions()` method on your 
 
 ```
 public function getSortOptions()
-    {
-        return array(
-            'Created' => 'Date',
-            'Title' => 'Name A-Z',
-            'Title DESC' => 'Name Z-A',
-        );
-    }
+{
+  return array(
+    'Created' => 'Date',
+    'Title' => 'Name A-Z',
+    'Title DESC' => 'Name Z-A',
+  );
+}
 ```
 
 ## Templates
