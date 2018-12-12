@@ -26,7 +26,7 @@ Display a filterable collection of pages or dataobjects on a page.
 In your config.yml:
 
 ```
-ExamplePage_Controller:
+Your/Namespace/ExamplePageController:
   managed_object: ExampleObject
   page_size: 10
   extensions:
@@ -38,7 +38,7 @@ ExamplePage_Controller:
 Collection will create a search form based on the managed object's `$searchable_fields`. 
 
 ```
-priavte static $searchable_fields = [
+private static $searchable_fields = [
   'Title' => [
     'title' => 'Name',
   ],
