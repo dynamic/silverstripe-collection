@@ -119,12 +119,16 @@ class CollectionExtension extends Extension
      */
     public function setCollectionObject()
     {
-        try {
-            /** @var \SilverStripe\ORM\DataObject $collection_object */
-            $collection_object = $this->owner->config()->get('managed_object');
-            $this->collection_object = $collection_object::create();
-        } catch (Exception $e) {
-            trigger_error($e, E_USER_NOTICE);
+        $this->owner->extend('updateCollectionObject', $this->collection_object);
+
+        if (!$this->collection_object) {
+            try {
+                /** @var \SilverStripe\ORM\DataObject $collection_object */
+                $collection_object = $this->owner->config()->get('managed_object');
+                $this->collection_object = $collection_object::create();
+            } catch (Exception $e) {
+                trigger_error($e, E_USER_NOTICE);
+            }
         }
 
         return $this;
