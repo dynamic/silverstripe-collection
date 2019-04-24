@@ -66,7 +66,7 @@ class CollectionExtension extends Extension
 
         $sort = ($request->getVar('Sort'))
             ? (string) $request->getVar('Sort')
-            : $object->stat('default_sort');
+            : $object->config()->get('default_sort');
 
 
         // check if the sort has an order (ASC or DESC)
@@ -188,7 +188,7 @@ class CollectionExtension extends Extension
         $object = $this->getCollectionObject();
         /** @var HTTPRequest $request */
         $request = ($this->owner->request) ? $this->owner->request : $this->owner->parentController->getRequest();
-        $sort = ($request->getVar('Sort')) ? (string) $request->getVar('Sort') : $object->stat('default_sort');
+        $sort = ($request->getVar('Sort')) ? (string) $request->getVar('Sort') : $object->config()->get('default_sort');
 
         $context = ($object->hasMethod('getCustomSearchContext'))
             ? $object->getCustomSearchContext()
@@ -198,8 +198,8 @@ class CollectionExtension extends Extension
         // add sort field if managed object specs getSortOptions()
         if ($object->hasMethod('getSortOptions')) {
             $sortOptions = $object->getSortOptions();
-            if ($object->stat('default_sort')) {
-                $defaultSort = array(str_replace('"', '', $object->stat('default_sort')) => 'Default');
+            if ($object->config()->get('default_sort')) {
+                $defaultSort = array(str_replace('"', '', $object->config()->get('default_sort')) => 'Default');
                 $sortOptions = array_merge($defaultSort, $sortOptions);
             }
             $fields->add(
