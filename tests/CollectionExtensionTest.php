@@ -2,6 +2,7 @@
 
 namespace Dynamic\Collection\Test;
 
+use Dynamic\Collection\CollectionExtension;
 use Dynamic\Collection\Test\TestOnly\TestCollection;
 use Dynamic\Collection\Test\TestOnly\TestCollectionController;
 use Dynamic\Collection\Test\TestOnly\TestCollectionObject;
@@ -40,9 +41,18 @@ class CollectionExtensionTest extends FunctionalTest
     );
 
     /**
+     * @var array
+     */
+    protected static $required_extensions = [
+        TestCollectionController::class => [
+            CollectionExtension::class,
+        ],
+    ];
+
+    /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -67,6 +77,7 @@ class CollectionExtensionTest extends FunctionalTest
     {
         $object = $this->objFromFixture(TestCollection::class, 'default');
         $controller = new TestCollectionController($object);
+        TestCollectionController::config()->set('managed_object', TestCollectionObject::class);
         $this->assertInstanceOf(DataList::class, $controller->getCollection());
 
         $object = $controller->config()->managed_object;
