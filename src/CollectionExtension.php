@@ -14,6 +14,11 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\GroupedList;
 use SilverStripe\ORM\PaginatedList;
 
+/**
+ * Class \Dynamic\Collection\CollectionExtension
+ *
+ * @property ProductFileCollectionController|CollectionExtension $owner
+ */
 class CollectionExtension extends Extension
 {
     /**
