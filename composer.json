@@ -31,12 +31,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "extra": {
-        "installer-name": "collection",
-        "branch-alias": {
-            "dev-master": "2.0.x-dev",
-            "dev-1.0": "1.0.x-dev"
-        }
-    }
+    "prefer-stable": true
 }
