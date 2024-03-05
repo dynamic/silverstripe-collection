@@ -72,7 +72,9 @@ class CollectionExtension extends Extension
         // check if the sort has an order (ASC or DESC)
         // prevents query errors when sorting on relations with an order ('Location.Title DESC')
         // no order
-        if (strpos($sort, ' ') === false) {
+        if(is_array($sort)) {
+            $collection = $context->getResults($searchCriteria)->sort($sort);
+        } elseif (strpos($sort, ' ') === false) {
             $collection = $context->getResults($searchCriteria)->sort($sort);
             // order is given
         } else {
